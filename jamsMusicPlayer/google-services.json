@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "90278182805",
+    "firebase_url": "https://jams-eae78.firebaseio.com",
+    "project_id": "jams-eae78",
+    "storage_bucket": "jams-eae78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90278182805:android:2b7273594fad9230",
+        "android_client_info": {
+          "package_name": "com.jams.music.player"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90278182805-anonk86iffsl1c79pbuomkpr0djbinon.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jams.music.player",
+            "certificate_hash": "83DD3CDC47A7211859EF53CC6AAED08175E6A617"
+          }
+        },
+        {
+          "client_id": "90278182805-jdtklgikkm1kthhp7fjc2o0b2sktlgfd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAguvtZEP3IWenyzBXRQj90vWzQ1Q6PG7g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90278182805-jdtklgikkm1kthhp7fjc2o0b2sktlgfd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
