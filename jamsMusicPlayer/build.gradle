@@ -69,6 +69,7 @@ dependencies {
     compile 'com.google.firebase:firebase-database:9.4.0'
     compile files('jsoup-1.9.2.jar')
     compile 'com.mani:ThinDownloadManager:1.2.5'
+    compile project(':actionbarsherlock')
 }
 
 apply plugin: 'com.google.gms.google-services'

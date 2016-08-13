@@ -15,17 +15,9 @@
  */
 package com.jams.music.player.MusicFoldersSelectionFragment;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,36 +32,37 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jams.music.player.R;
 import com.jams.music.player.DBHelpers.DBAccessHelper;
 import com.jams.music.player.Helpers.TypefaceHelper;
 import com.jams.music.player.Helpers.UIElementsHelper;
+import com.jams.music.player.R;
 import com.jams.music.player.Utils.Common;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 public class MusicFoldersSelectionFragment extends Fragment {
-	
+
+	private static boolean CALLED_FROM_WELCOME = false;
 	private Context mContext;
 	private Common mApp;
 	private boolean mWelcomeSetup = false;
-
     private RelativeLayout mUpLayout;
     private ImageView mUpIcon;
     private TextView mUpText;
     private TextView mCurrentFolderText;
-
 	private ListView mFoldersListView;
 	private Cursor mCursor;
-	
 	private String mRootDir;
 	private String mCurrentDir;
-	
-	private List<String> mFileFolderNamesList; 
+	private List<String> mFileFolderNamesList;
 	private List<String> mFileFolderPathsList;
 	private List<String> mFileFolderSizesList;
 	private HashMap<String, Boolean> mMusicFolders;
-	
-	private static boolean CALLED_FROM_WELCOME = false;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
@@ -178,6 +171,7 @@ public class MusicFoldersSelectionFragment extends Fragment {
 		mFileFolderSizesList = new ArrayList<String>();
 		
 		File f = new File(dirPath);
+
 		File[] files = f.listFiles();
 		Arrays.sort(files);
 		 

@@ -15,16 +15,20 @@
  */
 package com.jams.music.player.MainActivity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -53,30 +57,11 @@ import com.jams.music.player.ListViewFragment.ListViewFragment;
 import com.jams.music.player.R;
 import com.jams.music.player.Utils.Common;
 import com.jams.music.player.firebase.Config;
-import com.jams.music.player.firebase.DownloadMusicTask;
 import com.jams.music.player.firebase.Song;
 import com.jams.music.player.firebase.SyncMusicTask;
 
 public class MainActivity extends FragmentActivity {
-
-    //Context and Common object(s).
-    private Context mContext;
-    private Common mApp;
-
-    //UI elements.
-    private FrameLayout mDrawerParentLayout;
-    private DrawerLayout mDrawerLayout;
-    private RelativeLayout mNavDrawerLayout;
-    private RelativeLayout mCurrentQueueDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private QueueDrawerFragment mQueueDrawerFragment;
-    private Menu mMenu;
-
-    //Current fragment params.
-    private Fragment mCurrentFragment;
-    public static int mCurrentFragmentId;
-    public static int mCurrentFragmentLayout;
-
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 12;
     //Layout flags.
     public static final String CURRENT_FRAGMENT = "CurrentFragment";
     public static final String ARTISTS_FRAGMENT_LAYOUT = "ArtistsFragmentLayout";
@@ -88,15 +73,36 @@ public class MainActivity extends FragmentActivity {
     public static final String FRAGMENT_HEADER = "FragmentHeader";
     public static final int LIST_LAYOUT = 0;
     public static final int GRID_LAYOUT = 1;
+    private static final int MENU_SYNC = 1;
+    public static int mCurrentFragmentId;
+    public static int mCurrentFragmentLayout;
+    protected MenuItem refreshItem = null;
     boolean t = true;
     DatabaseReference songTable;
     ChildEventListener addSongListener;
+    //Context and Common object(s).
+    private Context mContext;
+    private Common mApp;
+    //UI elements.
+    private FrameLayout mDrawerParentLayout;
+    private DrawerLayout mDrawerLayout;
+    private RelativeLayout mNavDrawerLayout;
+    private RelativeLayout mCurrentQueueDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private QueueDrawerFragment mQueueDrawerFragment;
+    private Menu mMenu;
+    //Current fragment params.
+    private Fragment mCurrentFragment;
+
+    public Fragment getmCurrentFragment() {
+        return mCurrentFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         createAndUseFirebase();
-
+        requestPermissionsForApp();
 
         //Context and Common object(s).
         mContext = getApplicationContext();
@@ -160,6 +166,16 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    private void requestPermissionsForApp() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
     private void createAndUseFirebase() {
         songTable = Config.firebaseDatabase.getReference("Songs");
         addSongListener = new ChildEventListener() {
@@ -170,7 +186,7 @@ public class MainActivity extends FragmentActivity {
                     Config.serverSongList.add(ss);
 
                 }
-                Log.e("cxz","child add:"+ss);
+                Log.e("cxz", "child add:" + ss);
             }
 
             @Override
@@ -197,18 +213,9 @@ public class MainActivity extends FragmentActivity {
         songTable.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                for(DataSnapshot d : dataSnapshot.getChildren()) {
-//                    Song s = d.getValue(Song.class);
-//                    Log.e("cxz", "data changed:" + s);
-//
-//                }
-                if(Config.serverSongList.size()>0) {
-//                    if(t) {
-                        SyncMusicTask syncMusicTask = new SyncMusicTask(MainActivity.this);
-                        syncMusicTask.execute();
-
-//                        t= false;
-//                    }
+                if (Config.serverSongList.size() > 0) {
+//                        SyncMusicTask syncMusicTask = new SyncMusicTask(MainActivity.this);
+//                        syncMusicTask.execute();
                 }
             }
 
@@ -217,7 +224,6 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
-
 
 
     }
@@ -473,9 +479,17 @@ public class MainActivity extends FragmentActivity {
             if (title != null) {
                 title.setTextColor(0xFFFFFFFF);
             }
-
         }
 
+        //////////////////////////add refresh button
+        menu.add(Menu.NONE, MENU_SYNC, Menu.NONE, "Sync music")
+                .setIcon(R.drawable.loading_icon)
+                .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        setRefreshItem(menu.findItem(MENU_SYNC));
+    }
+
+    protected void setRefreshItem(MenuItem item) {
+        refreshItem = item;
     }
 
     /**
@@ -573,7 +587,6 @@ public class MainActivity extends FragmentActivity {
                     } else {
                         mDrawerLayout.openDrawer(mCurrentQueueDrawerLayout);
                     }
-
                 }
                 return true;
             case R.id.action_up:
@@ -589,6 +602,11 @@ public class MainActivity extends FragmentActivity {
                     Toast.makeText(mContext, R.string.move_canceled, Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(mContext, R.string.copy_canceled, Toast.LENGTH_LONG).show();
+                return true;
+            case MENU_SYNC:
+                Log.e("cxz", "start sync");
+                SyncMusicTask syncMusicTask = new SyncMusicTask(MainActivity.this);
+                syncMusicTask.execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -646,4 +664,15 @@ public class MainActivity extends FragmentActivity {
         return mMenu;
     }
 
+    public void startSyncAnim() {
+        if (refreshItem != null) {
+            refreshItem.setActionView(R.layout.indeterminate_progress_action);
+        }
+    }
+
+    public void stopSyncAnim() {
+        if (refreshItem != null) {
+            refreshItem.setActionView(null);
+        }
+    }
 }

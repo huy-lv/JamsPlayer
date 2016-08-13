@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.TextView;
 
 import com.jams.music.player.Helpers.UIElementsHelper;
 import com.jams.music.player.R;
@@ -46,15 +45,16 @@ public class SettingsActivity extends PreferenceActivity {
         mActivity = this;
         mApp = (Common) mContext;
 
-        setTheme(R.style.SettingsThemeLight);
+//        setTheme(R.style.SettingsThemeLight);
         super.onCreate(savedInstanceState);
 
         //Set the ActionBar background and text color.
-        getActionBar().setBackgroundDrawable(UIElementsHelper.getGeneralActionBarBackground(mContext));
-        getActionBar().setTitle(R.string.settings);
-        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-        TextView actionBarText = (TextView) findViewById(titleId);
-        actionBarText.setTextColor(0xFFFFFFFF);
+//        getActionBar().setBackgroundDrawable(UIElementsHelper.getGeneralActionBarBackground(mContext));
+//        getActionBar().setTitle(R.string.settings);
+//        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+//        TextView actionBarText = (TextView) findViewById(titleId);
+//        actionBarText.setTextColor(0xFFFFFFFF);
+
 
     }
 
@@ -71,11 +71,11 @@ public class SettingsActivity extends PreferenceActivity {
                 actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
             }
 
-            ((View) this.getListView().getParent()).setPadding(0, actionBarHeight + mApp.getStatusBarHeight(mContext),
+            ((View) this.getListView().getParent()).setPadding(0, actionBarHeight + Common.getStatusBarHeight(mContext),
                                                                0, 0);
 
             this.getListView().setBackgroundColor(0xFFEEEEEE);
-            this.getListView().setPadding(0, 0, 0, mApp.getNavigationBarHeight(mContext));
+            this.getListView().setPadding(0, 0, 0, Common.getNavigationBarHeight(mContext));
             this.getListView().setClipToPadding(false);
 
             //Set the window color.
@@ -102,7 +102,7 @@ public class SettingsActivity extends PreferenceActivity {
     public void onResume() {
         super.onResume();
         applyKitKatTranslucency();
-        getActionBar().setBackgroundDrawable(UIElementsHelper.getGeneralActionBarBackground(mContext));
+//        getActionBar().setBackgroundDrawable(UIElementsHelper.getGeneralActionBarBackground(mContext));
 
     }
 

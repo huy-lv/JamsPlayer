@@ -579,6 +579,7 @@
     <string name="headphones_unplug_action">Headphones Unplug Action</string>
     <string name="crossfade_tracks">Crossfade Tracks</string>
     <string name="current_queue">Current queue</string>
+    <string name="sync_music">Sync music</string>
     <string name="close_other_audio_apps">Close any other apps that may be playing audio.</string>
     <string name="unable_to_stream_song">Error streaming song.</string>
 

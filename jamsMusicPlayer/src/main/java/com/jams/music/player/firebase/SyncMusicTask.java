@@ -4,8 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jams.music.player.DBHelpers.DBAccessHelper;
+import com.jams.music.player.MainActivity.MainActivity;
 
 /**
  * Created by HuyLV-CT on 10-Aug-16.
@@ -15,6 +17,12 @@ public class SyncMusicTask extends AsyncTask<Void,Void,Integer> {
 
     public SyncMusicTask(Context c){
         context = c;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        ((MainActivity) context).startSyncAnim();
     }
 
     @Override
@@ -65,6 +73,8 @@ public class SyncMusicTask extends AsyncTask<Void,Void,Integer> {
         if(Config.songToDownload.size()>0 || Config.songToDelete.size()>0) {
             DownloadMusicTask downloadMusicTask = new DownloadMusicTask(context);
             downloadMusicTask.execute();
+        } else {
+            Toast.makeText(context, "Everything synced!", Toast.LENGTH_SHORT).show();
         }
     }
 
